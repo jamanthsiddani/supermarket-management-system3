@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supermarket Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 10px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        nav {
+            margin-top: 10px;
+        }
+
+        nav a {
+            color: #fff;
+            margin: 0 15px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #16a085;
+        }
+
+        main {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #16a085;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        input, button {
+            width: 80%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .list-item {
+            background-color: #ecf0f1;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 4px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+
+        .toggle-button {
+            background-color: #1abc9c;
+            margin-top: 10px;
+        }
+
+        .toggle-button:hover {
+            background-color: #16a085;
+        }
+
+        footer {
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 10px 0;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Supermarket Management System</h1>
+        <nav>
+            <a href="#product-section">Products</a>
+            <a href="#worker-section">Workers</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Product Details Section -->
+        <section id="product-section">
+            <h2>Product Details</h2>
+            <form id="product-form">
+                <input type="text" id="product-name" placeholder="Product Name" required>
+                <input type="number" id="product-price" placeholder="Price" required>
+                <button type="button" id="add-product">Add Product</button>
+            </form>
+            <button type="button" id="show-products" class="toggle-button">Show Products</button>
+            <div id="product-list" class="hidden"></div>
+        </section>
+        
+        <!-- Worker Details Section -->
+        <section id="worker-section">
+            <h2>Worker Details</h2>
+            <form id="worker-form">
+                <input type="text" id="worker-name" placeholder="Worker Name" required>
+                <input type="text" id="worker-role" placeholder="Role" required>
+                <button type="button" id="add-worker">Add Worker</button>
+            </form>
+            <button type="button" id="show-workers" class="toggle-button">Show Workers</button>
+            <div id="worker-list" class="hidden"></div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Supermarket Management System. All Rights Reserved.</p>
+    </footer>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    const productForm = document.getElementById("product-form");
+    const productNameInput = document.getElementById("product-name");
+    const productPriceInput = document.getElementById("product-price");
+    const productList = document.getElementById("product-list");
+    const showProductsButton = document.getElementById("show-products");
+
+    const workerForm = document.getElementById("worker-form");
+    const workerNameInput = document.getElementById("worker-name");
+    const workerRoleInput = document.getElementById("worker-role");
+    const workerList = document.getElementById("worker-list");
+    const showWorkersButton = document.getElementById("show-workers");
+
+    // Product details array
+    const products = [];
+
+    // Worker details array
+    const workers = [];
+
+    // Add product function
+    function addProduct() {
+        const productName = productNameInput.value;
+        const productPrice = parseFloat(productPriceInput.value);
+
+        if (productName && productPrice) {
+            const product = { name: productName, price: productPrice };
+            products.push(product);
+            clearProductForm();
+        }
+    }
+
+    // Display products
+    function displayProducts() {
+        productList.innerHTML = "";
+        products.forEach((product, index) => {
+            productList.innerHTML += `
+                <div class="list-item">${product.name} - $${product.price.toFixed(2)}</div>
+            `;
+        });
+    }
+
+    // Clear product form
+    function clearProductForm() {
+        productNameInput.value = "";
+        productPriceInput.value = "";
+    }
+
+    // Add worker function
+    function addWorker() {
+        const workerName = workerNameInput.value;
+        const workerRole = workerRoleInput.value;
+
+        if (workerName && workerRole) {
+            const worker = { name: workerName, role: workerRole };
+            workers.push(worker);
+            clearWorkerForm();
+        }
+    }
+
+    // Display workers
+    function displayWorkers() {
+        workerList.innerHTML = "";
+        workers.forEach((worker, index) => {
+            workerList.innerHTML += `
+                <div class="list-item">${worker.name} - ${worker.role}</div>
+            `;
+        });
+    }
+
+    // Clear worker form
+    function clearWorkerForm() {
+        workerNameInput.value = "";
+        workerRoleInput.value = "";
+    }
+
+    // Event listeners
+    document.getElementById("add-product").addEventListener("click", function () {
+        addProduct();
+    });
+
+    document.getElementById("add-worker").addEventListener("click", function () {
+        addWorker();
+    });
+
+    showProductsButton.addEventListener("click", function () {
+        productList.classList.toggle("hidden");
+        if (!productList.classList.contains("hidden")) {
+            displayProducts();
+        }
+        showProductsButton.textContent = productList.classList.contains("hidden") ? "Show Products" : "Hide Products";
+    });
+
+    showWorkersButton.addEventListener("click", function () {
+        workerList.classList.toggle("hidden");
+        if (!workerList.classList.contains("hidden")) {
+            displayWorkers();
+        }
+        showWorkersButton.textContent = workerList.classList.contains("hidden") ? "Show Workers" : "Hide Workers";
+    });
+});
+    </script>
+</body>
+</html>
